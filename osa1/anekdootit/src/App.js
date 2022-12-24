@@ -25,7 +25,6 @@ const App = () => {
     const [selected, setSelected] = useState(0)
     const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
     const bestAnecdoteIndex = votes.indexOf(Math.max(...votes))
-    console.log(bestAnecdoteIndex)
 
     const nextAnecdote = () => setSelected(Math.floor(Math.random() * anecdotes.length))
     const voteAnecdote = () => {
