@@ -94,7 +94,7 @@ const App = () => {
         }, 5000)
     }
 
-    const error = (message) => {
+    const notifyError = (message) => {
         setNotificationMessage(message)
         setNotificationColour("red")
         setTimeout(() => {
@@ -121,7 +121,7 @@ const App = () => {
                     notify(`Updated number for ${returnedPerson.name}`)
                 })
                 .catch(() => {
-                    error(`${newPerson.name} has already been ERADICATED from the server`)
+                    notifyError(`${newPerson.name} has already been ERADICATED from the server`)
                     setPersons(persons.filter(person => person.id !== oldPerson.id))
                 })
             return
@@ -134,6 +134,9 @@ const App = () => {
                 setNewName("")
                 setNewNumber("")
                 notify(`Added ${returnedPerson.name}`)
+            })
+            .catch(error => {
+                notifyError(error.response.data.error)
             })
     }
 
