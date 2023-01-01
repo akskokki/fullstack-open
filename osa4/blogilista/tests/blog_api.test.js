@@ -102,6 +102,38 @@ test('new blog returns 400 when added without url property', async () => {
     .expect(400)
 })
 
+test('specific blog can be deleted', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const idToDelete = blogsAtStart[0].id
+
+  await api.delete(`/api/blogs/${idToDelete}`).expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd.length).toBe(blogsAtStart.length - 1)
+})
+
+test('specific blog can be updated and contains correct values after updating', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const idToUpdate = blogsAtStart[0].id
+
+  const updatedBlog = {
+    title: 'updatedTitle',
+    author: 'updatedAuthor',
+    url: 'updatedUrl',
+    likes: 999
+  }
+
+  await api
+    .put(`/api/blogs/${idToUpdate}`)
+    .send(updatedBlog)
+    .expect(200)
+
+  updatedBlog.id = idToUpdate
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toContainEqual(updatedBlog)
+})
+
 
 afterAll(() => {
   mongoose.connection.close()
