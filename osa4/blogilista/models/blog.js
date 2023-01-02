@@ -6,6 +6,10 @@ const blogSchema = new mongoose.Schema({
     required: true
   },
   author: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   url: {
     type: String,
     required: true
@@ -15,7 +19,6 @@ const blogSchema = new mongoose.Schema({
 
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    if (!('likes' in returnedObject)) returnedObject.likes = 0
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
