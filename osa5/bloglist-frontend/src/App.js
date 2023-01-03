@@ -11,6 +11,7 @@ const App = () => {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setblogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -27,21 +28,32 @@ const App = () => {
     }
   }, [])
 
+  const notify = (message) => {
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
-    event.preventDefault()
+    try {
+      event.preventDefault()
 
-    const user = await loginService.login({
-      username, password,
-    })
+      const user = await loginService.login({
+        username, password,
+      })
 
-    window.localStorage.setItem(
-      'loggedUser', JSON.stringify(user)
-    )
+      window.localStorage.setItem(
+        'loggedUser', JSON.stringify(user)
+      )
 
-    blogService.setToken(user.token)
-    setUser(user)
-    setUsername('')
-    setPassword('')
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (error) {
+      notify('invalid username or password')
+    }
   }
 
   const handleLogout = async (event) => {
@@ -64,10 +76,17 @@ const App = () => {
 
     const returnedBlog = await blogService.create(newBlog)
     setBlogs(blogs.concat(returnedBlog))
+    notify(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
     setBlogTitle('')
     setblogAuthor('')
     setBlogUrl('')
   }
+
+  const notification = () => (
+    <div style={{ border: '5px', borderColor: 'blue', borderStyle: 'solid', padding: '0.5em' }}>
+      {notificationMessage}
+    </div>
+  )
 
   const loginForm = () => (
     <div>
@@ -142,6 +161,7 @@ const App = () => {
 
   return (
     <div>
+      {notificationMessage !== null && notification()}
       {user === null ?
         loginForm()
         :
