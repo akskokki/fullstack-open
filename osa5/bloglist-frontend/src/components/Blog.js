@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, likeBlog }) => {
   const [viewDetails, setViewDetails] = useState(false)
 
   const blogStyle = {
@@ -14,7 +14,7 @@ const Blog = ({ blog }) => {
   const details = () => (
     <div>
       <div>{blog.url}</div>
-      <div>{blog.likes} <button>like</button></div>
+      <div>{blog.likes} <button onClick={() => likeBlog(blog.id.toString())}>like</button></div>
       <div>{blog.user.name ? blog.user.name : blog.user.username}</div>
     </div>
   )

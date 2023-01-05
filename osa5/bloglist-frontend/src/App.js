@@ -73,6 +73,14 @@ const App = () => {
     notify(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
   }
 
+  const likeBlog = async (blogId) => {
+    const blog = blogs.find(b => b.id === blogId)
+    const returnedBlog = await blogService.addLike(blog)
+    setBlogs(blogs.map(b => {
+      return b.id === blogId ? returnedBlog : b
+    }))
+  }
+
   const notification = () => (
     <div style={{ border: '5px', borderColor: 'blue', borderStyle: 'solid', padding: '0.5em' }}>
       {notificationMessage}
@@ -108,6 +116,7 @@ const App = () => {
 
   const blogsView = () => (
     <div>
+      <button onClick={() => console.log(blogs)}>clog blogs</button>
       <h2>blogs</h2>
       <p>
         {user.name || user.username} logged in
@@ -116,9 +125,10 @@ const App = () => {
       <Togglable buttonLabel='new blog' ref={blogFormRef}>
         <BlogForm addBlog={addBlog} />
       </Togglable>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog => <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />)
+      }
     </div>
   )
 

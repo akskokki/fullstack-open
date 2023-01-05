@@ -21,5 +21,20 @@ const create = async newBlog => {
   return response.data
 }
 
+const addLike = async (blog) => {
+  const blogUrl = baseUrl + '/' + blog.id
+
+  const likedBlog = {
+    user: blog.user.id,
+    likes: blog.likes + 1,
+    author: blog.author,
+    title: blog.title,
+    url: blog.url
+  }
+
+  const response = await axios.put(blogUrl, likedBlog)
+  return response.data
+}
+
 //eslint-disable-next-line
-export default { getAll, setToken, create }
+export default { getAll, setToken, create, addLike }
