@@ -36,5 +36,14 @@ const addLike = async (blog) => {
   return response.data
 }
 
+const remove = async blogId => {
+  const blogUrl = `${baseUrl}/${blogId}`
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  await axios.delete(blogUrl, config)
+}
+
 //eslint-disable-next-line
-export default { getAll, setToken, create, addLike }
+export default { getAll, setToken, create, addLike, remove }

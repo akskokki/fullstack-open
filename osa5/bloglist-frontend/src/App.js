@@ -41,7 +41,7 @@ const App = () => {
       event.preventDefault()
 
       const user = await loginService.login({
-        username, password,
+        username, password
       })
 
       window.localStorage.setItem(
@@ -81,6 +81,11 @@ const App = () => {
     }))
   }
 
+  const removeBlog = async (blogId) => {
+    await blogService.remove(blogId)
+    setBlogs(blogs.filter(blog => blog.id !== blogId))
+  }
+
   const notification = () => (
     <div style={{ border: '5px', borderColor: 'blue', borderStyle: 'solid', padding: '0.5em' }}>
       {notificationMessage}
@@ -116,7 +121,7 @@ const App = () => {
 
   const blogsView = () => (
     <div>
-      <button onClick={() => console.log(blogs)}>clog blogs</button>
+      {/*<button onClick={() => console.log(blogs)}>clog blogs</button>*/}
       <h2>blogs</h2>
       <p>
         {user.name || user.username} logged in
@@ -127,7 +132,13 @@ const App = () => {
       </Togglable>
       {blogs
         .sort((a, b) => b.likes - a.likes)
-        .map(blog => <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />)
+        .map(blog => <Blog
+          key={blog.id}
+          blog={blog}
+          likeBlog={likeBlog}
+          loggedUser={user}
+          removeBlog={removeBlog}
+        />)
       }
     </div>
   )
