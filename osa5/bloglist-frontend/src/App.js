@@ -82,6 +82,8 @@ const App = () => {
   }
 
   const removeBlog = async (blogId) => {
+    const blog = blogs.find(b => b.id === blogId)
+    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) return
     await blogService.remove(blogId)
     setBlogs(blogs.filter(blog => blog.id !== blogId))
   }
