@@ -23,7 +23,7 @@ const Blog = ({ blog, likeBlog, loggedUser, removeBlog }) => {
   )
 
   return (
-    <div style={blogStyle}>
+    <div className='blog' style={blogStyle}>
       <div>
         {blog.title} {blog.author}
         <button onClick={() => setViewDetails(!viewDetails)}>view</button>
@@ -36,7 +36,7 @@ const Blog = ({ blog, likeBlog, loggedUser, removeBlog }) => {
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   likeBlog: PropTypes.func.isRequired,
-  loggedUser: PropTypes.object.isRequired,
+  loggedUser: PropTypes.object,
   removeBlog: PropTypes.func.isRequired
 }
 
