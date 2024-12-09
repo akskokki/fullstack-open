@@ -35,11 +35,14 @@ const Blog = ({ blog, addLike, removeBlog, user }) => {
 
   const blogDetails = () => (
     <>
-      <div>{blog.url}</div>
-      <div>
-        likes {blog.likes} <button onClick={handleLike}>like</button>
+      <div data-testid="blogUrl">{blog.url}</div>
+      <div data-testid="blogLikes">
+        likes {blog.likes}{' '}
+        <button onClick={handleLike} data-testid="blogLikeButton">
+          like
+        </button>
       </div>
-      <div>{blog.user.username}</div>
+      <div data-testid="blogUsername">{blog.user.username}</div>
       {user.username === blog.user.username && (
         <button onClick={handleRemove}>remove</button>
       )}
@@ -50,7 +53,9 @@ const Blog = ({ blog, addLike, removeBlog, user }) => {
     <div style={blogStyle}>
       <div>
         {blog.title} {blog.author}{' '}
-        <button onClick={toggleDetails}>{details ? 'hide' : 'view'}</button>
+        <button onClick={toggleDetails} data-testid="blogDetailsButton">
+          {details ? 'hide' : 'view'}
+        </button>
       </div>
       {details && blogDetails()}
     </div>
