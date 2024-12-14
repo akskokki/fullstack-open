@@ -58,14 +58,6 @@ const App = () => {
     setUser(null)
   }
 
-  const removeBlog = async (id) => {
-    await blogService.remove(id)
-  }
-
-  const addLike = async (id, blogObject) => {
-    await blogService.update(id, blogObject)
-  }
-
   if (user === null) {
     return (
       <div>
@@ -111,13 +103,7 @@ const App = () => {
       {blogs
         .toSorted((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            addLike={addLike}
-            removeBlog={removeBlog}
-            user={user}
-          />
+          <Blog key={blog.id} blog={blog} user={user} />
         ))}
     </div>
   )
