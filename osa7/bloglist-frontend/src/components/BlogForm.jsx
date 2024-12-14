@@ -5,7 +5,7 @@ import { notify } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
 import Togglable from './Togglable'
 
-const BlogForm = ({ blogFormRef }) => {
+const BlogForm = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
