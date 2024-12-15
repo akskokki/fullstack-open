@@ -106,7 +106,7 @@ const App = () => {
   return (
     <div>
       <Menu />
-      <h1>blogs</h1>
+      <h1>blog app</h1>
       <Notification />
       <Routes>
         <Route path="/" element={<BlogsView blogs={blogs} />} />

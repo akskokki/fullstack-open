@@ -1,11 +1,17 @@
 import { useDispatch } from 'react-redux'
-import { likeBlog } from '../../reducers/blogReducer'
+import { commentBlog, likeBlog } from '../../reducers/blogReducer'
 
 const BlogView = ({ blog }) => {
   const dispatch = useDispatch()
 
   const handleLike = () => {
     dispatch(likeBlog(blog))
+  }
+
+  const handleComment = (event) => {
+    event.preventDefault()
+    dispatch(commentBlog(blog, event.target.comment.value))
+    event.target.comment.value = ''
   }
 
   if (!blog) return null
@@ -22,6 +28,16 @@ const BlogView = ({ blog }) => {
         {blog.likes} likes<button onClick={handleLike}>like</button>
       </div>
       <div>added by {blog.user.name}</div>
+      <h3>comments</h3>
+      <form onSubmit={handleComment}>
+        <input name="comment"></input>
+        <button>add comment</button>
+      </form>
+      <ul>
+        {blog.comments.map((comment, i) => (
+          <li key={i}>{comment}</li>
+        ))}
+      </ul>
     </div>
   )
 }

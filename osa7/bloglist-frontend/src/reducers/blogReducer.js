@@ -64,4 +64,20 @@ export const likeBlog = (blog) => {
   }
 }
 
+export const commentBlog = (blog, comment) => {
+  return async (dispatch) => {
+    console.log(comment)
+    console.log(blog)
+    const updatedBlog = {
+      ...blog,
+      comments: blog.comments.concat(comment),
+      user: blog.user.id,
+    }
+    console.log(updatedBlog)
+    const returnedBlog = await blogService.update(updatedBlog)
+    console.log(returnedBlog)
+    dispatch(updateBlog(returnedBlog))
+  }
+}
+
 export default blogSlice.reducer
