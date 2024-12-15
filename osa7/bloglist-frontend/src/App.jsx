@@ -1,27 +1,38 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Route, Routes, useMatch } from 'react-router-dom'
 
-import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import userService from './services/users'
 import { notify } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
-import { setUser, clearUser } from './reducers/userReducer'
+import { setUser } from './reducers/userReducer'
+import UsersView from './components/views/UsersView'
+import BlogsView from './components/views/BlogsView'
+import UserView from './components/views/UserView'
+import BlogView from './components/views/BlogView'
+import Menu from './components/Menu'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [users, setUsers] = useState(null)
 
   const dispatch = useDispatch()
   const blogs = useSelector((state) => state.blogs)
-  const user = useSelector((state) => state.user)
+  const currentUser = useSelector((state) => state.user)
 
   // fetch blogs on load
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [dispatch])
+
+  // fetch users on load
+  useEffect(() => {
+    userService.getAll().then((users) => setUsers(users))
+  }, [])
 
   // fetch logged-in user on load
   useEffect(() => {
@@ -52,13 +63,15 @@ const App = () => {
     }
   }
 
-  const handleLogout = () => {
-    window.localStorage.clear()
-    dispatch(clearUser())
-    blogService.setToken(null)
-  }
+  const matchUser = useMatch('/users/:id')
+  const user =
+    matchUser && users ? users.find((u) => u.id === matchUser.params.id) : null
 
-  if (user === null) {
+  const matchBlog = useMatch('/blogs/:id')
+  const blog =
+    matchBlog && blogs ? blogs.find((u) => u.id === matchBlog.params.id) : null
+
+  if (currentUser === null) {
     return (
       <div>
         <h2>log in to application</h2>
@@ -92,19 +105,15 @@ const App = () => {
 
   return (
     <div>
+      <Menu />
       <h1>blogs</h1>
       <Notification />
-      <div>
-        {user.name} logged in
-        <button onClick={handleLogout}>log out</button>
-      </div>
-      <br />
-      <BlogForm />
-      {blogs
-        .toSorted((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog key={blog.id} blog={blog} user={user} />
-        ))}
+      <Routes>
+        <Route path="/" element={<BlogsView blogs={blogs} />} />
+        <Route path="/blogs/:id" element={<BlogView blog={blog} />} />
+        <Route path="/users" element={<UsersView users={users} />} />
+        <Route path="/users/:id" element={<UserView user={user} />} />
+      </Routes>
     </div>
   )
 }
