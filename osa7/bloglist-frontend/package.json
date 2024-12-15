@@ -11,6 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.2.0",
     "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.4.0",
     "prettier-eslint": "^16.3.0",

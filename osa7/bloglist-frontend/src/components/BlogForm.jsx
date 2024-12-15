@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { notify } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
 import Togglable from './Togglable'
+import { Box, Button, TextField } from '@mui/material'
 
 const BlogForm = () => {
   const [title, setTitle] = useState('')
@@ -25,7 +26,8 @@ const BlogForm = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
-    } catch {
+      dispatch(notify('blog created!', 'info'))
+    } catch (e) {
       dispatch(notify('blog creation failed', 'error'))
     }
   }
@@ -33,39 +35,40 @@ const BlogForm = () => {
   return (
     <Togglable buttonLabel="create new blog" ref={toggleRef}>
       <form onSubmit={addBlog}>
-        <div>
-          title:
-          <input
-            data-testid="blogFormTitleInput"
-            type="text"
+        <Box sx={{ my: 1 }}>
+          <TextField
+            size="small"
+            label="title"
             value={title}
             name="Title"
             onChange={({ target }) => setTitle(target.value)}
           />
-        </div>
-        <div>
-          author:
-          <input
-            data-testid="blogFormAuthorInput"
-            type="text"
+        </Box>
+        <Box sx={{ my: 1 }}>
+          <TextField
+            size="small"
+            label="author"
             value={author}
             name="Author"
             onChange={({ target }) => setAuthor(target.value)}
           />
-        </div>
-        <div>
-          url:
-          <input
-            data-testid="blogFormUrlInput"
-            type="text"
+        </Box>
+        <Box sx={{ my: 1 }}>
+          <TextField
+            size="small"
+            label="url"
             value={url}
             name="Url"
             onChange={({ target }) => setUrl(target.value)}
           />
-        </div>
-        <button data-testid="blogFormSubmitButton" type="submit">
+        </Box>
+        <Button
+          variant="contained"
+          data-testid="blogFormSubmitButton"
+          type="submit"
+        >
           create
-        </button>
+        </Button>
       </form>
     </Togglable>
   )

@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { commentBlog, likeBlog } from '../../reducers/blogReducer'
+import { Button, Link, Paper, TextField, Typography } from '@mui/material'
 
 const BlogView = ({ blog }) => {
   const dispatch = useDispatch()
@@ -17,28 +18,37 @@ const BlogView = ({ blog }) => {
   if (!blog) return null
 
   return (
-    <div>
-      <h2>
+    <Paper elevation={5} sx={{ p: 2 }}>
+      <Typography variant="h4">
         {blog.title} by {blog.author}
-      </h2>
-      <div>
-        <a href={blog.url}>{blog.url}</a>
-      </div>
-      <div>
-        {blog.likes} likes<button onClick={handleLike}>like</button>
-      </div>
-      <div>added by {blog.user.name}</div>
-      <h3>comments</h3>
+      </Typography>
+      <Typography>
+        <Link href={blog.url}>{blog.url}</Link>
+      </Typography>
+      <Typography>
+        {blog.likes} likes{' '}
+        <Button variant="outlined" onClick={handleLike}>
+          like
+        </Button>
+      </Typography>
+      <Typography>added by {blog.user.name}</Typography>
+      <Typography variant="h5" sx={{ my: 1 }}>
+        comments
+      </Typography>
       <form onSubmit={handleComment}>
-        <input name="comment"></input>
-        <button>add comment</button>
+        <TextField size="small" name="comment" label="comment"></TextField>
+        <Button type="submit" variant="contained" sx={{ mx: 1 }}>
+          add comment
+        </Button>
       </form>
       <ul>
         {blog.comments.map((comment, i) => (
-          <li key={i}>{comment}</li>
+          <li key={i}>
+            <Typography>{comment}</Typography>
+          </li>
         ))}
       </ul>
-    </div>
+    </Paper>
   )
 }
 

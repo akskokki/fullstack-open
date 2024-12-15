@@ -1,19 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { clearUser } from '../reducers/userReducer'
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
 
 const Menu = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
-
-  const padding = {
-    paddingRight: 5,
-  }
-
-  const style = {
-    backgroundColor: '#bbbbbb',
-    padding: 5,
-  }
 
   const handleLogout = () => {
     window.localStorage.clear()
@@ -21,18 +13,27 @@ const Menu = () => {
   }
 
   return (
-    <div style={style}>
-      <Link style={padding} to="/">
-        blogs
-      </Link>
-      <Link style={padding} to="/users">
-        users
-      </Link>
-      <span style={padding}>{user.name} logged in</span>
-      <span style={padding}>
-        <button onClick={handleLogout}>log out</button>
-      </span>
-    </div>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <Button color="inherit" component={Link} to="/">
+            blogs
+          </Button>
+          <Button color="inherit" component={Link} to="/users">
+            users
+          </Button>
+          <Typography sx={{ mx: 2 }}>{user.name} logged in</Typography>
+          <Button
+            size="small"
+            color="inherit"
+            variant="outlined"
+            onClick={handleLogout}
+          >
+            log out
+          </Button>
+        </Toolbar>
+      </AppBar>
+    </Box>
   )
 }
 

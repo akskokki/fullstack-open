@@ -14,6 +14,7 @@ import BlogsView from './components/views/BlogsView'
 import UserView from './components/views/UserView'
 import BlogView from './components/views/BlogView'
 import Menu from './components/Menu'
+import { Typography } from '@mui/material'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -106,7 +107,9 @@ const App = () => {
   return (
     <div>
       <Menu />
-      <h1>blog app</h1>
+      <Typography variant="h2" sx={{ my: 2 }}>
+        blog app
+      </Typography>
       <Notification />
       <Routes>
         <Route path="/" element={<BlogsView blogs={blogs} />} />
