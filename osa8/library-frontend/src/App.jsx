@@ -4,13 +4,24 @@ import Books from './components/Books'
 import Login from './components/Login'
 import NewBook from './components/NewBook'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 import Recommend from './components/Recommend'
+import { ALL_AUTHORS, ALL_GENRES, BOOK_ADDED } from './queries'
+import { updateBookCache } from './utils'
 
 const App = () => {
   const [token, setToken] = useState()
   const client = useApolloClient()
   const navigate = useNavigate()
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const book = data.data.bookAdded
+      client.refetchQueries({ include: [ALL_GENRES] })
+      updateBookCache(client.cache, book)
+      window.alert(`new book added: ${book.title}`)
+    },
+  })
 
   useEffect(() => {
     const storedToken = localStorage.getItem('library-user-token')
