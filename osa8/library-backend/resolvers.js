@@ -42,28 +42,29 @@ const resolvers = {
           },
         })
       }
-      const author =
-        (await Author.findOne({ name: args.author })) ||
-        (await new Author({ name: args.author }).save().catch((error) => {
-          throw new GraphQLError(error.message, {
-            extensions: {
-              code: 'BAD_USER_INPUT',
-              invalidArgs: args.author,
-            },
-          })
-        }))
-      const book = new Book({ ...args, author })
 
-      pubsub.publish('BOOK_ADDED', { bookAdded: book })
+      try {
+        const author =
+          (await Author.findOne({ name: args.author })) ||
+          (await new Author({ name: args.author, bookCount: 0 }).save())
 
-      return book.save().catch((error) => {
+        const book = new Book({ ...args, author: author._id })
+        await book.save()
+
+        author.bookCount += 1
+        await author.save()
+
+        await book.populate('author')
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
+        return book
+      } catch (error) {
         throw new GraphQLError(error.message, {
           extensions: {
             code: 'BAD_USER_INPUT',
             invalidArgs: args.title,
           },
         })
-      })
+      }
     },
     editAuthor: async (root, args, context) => {
       if (!context.currentUser) {
@@ -111,13 +112,6 @@ const resolvers = {
   Subscription: {
     bookAdded: {
       subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED'),
-    },
-  },
-
-  Author: {
-    bookCount: async (root) => {
-      const author = await Author.find({ name: root.name })
-      return Book.find({ author }).countDocuments()
     },
   },
 }
