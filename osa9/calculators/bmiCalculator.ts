@@ -1,14 +1,14 @@
-interface BMIValues {
+interface BmiValues {
   height: number;
   weight: number;
 }
 
-const parseArgumentsBMI = (args: string[]): BMIValues => {
-  if (args.length < 4) throw new Error('Not enough arguments');
-  if (args.length > 4) throw new Error('Too many arguments');
-
-  const height = Number(args[2]);
-  const weight = Number(args[3]);
+export const parseArgumentsBmi = (
+  heightArg: unknown,
+  weightArg: unknown
+): BmiValues => {
+  const height = Number(heightArg);
+  const weight = Number(weightArg);
 
   if (isNaN(height) || isNaN(weight)) {
     throw new Error('Provided values must be numbers');
@@ -23,9 +23,7 @@ const parseArgumentsBMI = (args: string[]): BMIValues => {
   };
 };
 
-const calculateBmi = (): string => {
-  const { height, weight } = parseArgumentsBMI(process.argv);
-
+export const calculateBmi = (height: number, weight: number): string => {
   const bmi = weight / (height / 100) ** 2;
 
   if (bmi < 16) return 'Underweight (Severe thinness)';
@@ -38,12 +36,20 @@ const calculateBmi = (): string => {
   return 'Obese (Class III)';
 };
 
-try {
-  console.log(calculateBmi());
-} catch (e: unknown) {
-  if (e instanceof Error) {
-    console.log(`Error: ${e.message}`);
-  } else {
-    console.log('Unknown exception encountered');
+if (require.main === module) {
+  try {
+    const args = process.argv;
+    if (args.length < 4) throw new Error('Not enough arguments');
+    if (args.length > 4) throw new Error('Too many arguments');
+
+    const { height, weight } = parseArgumentsBmi(args[2], args[3]);
+
+    console.log(calculateBmi(height, weight));
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.log(`Error: ${e.message}`);
+    } else {
+      console.log('Unknown exception encountered');
+    }
   }
 }
