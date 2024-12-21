@@ -1,6 +1,10 @@
 import express from 'express';
 
 import { calculateBmi, parseArgumentsBmi } from './bmiCalculator';
+import {
+  calculateExercises,
+  parseArgumentsExercise,
+} from './exerciseCalculator';
 
 const app = express();
 
@@ -25,15 +29,19 @@ app.get('/bmi', (req, res) => {
 app.post('/exercises', (req, res) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const body = req.body;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const hoursArg = body.daily_exercises as Array<unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+  const targetArg = body.target;
 
-  const hoursArg = body.hours as Array<unknown>;
-
+  if (hoursArg === undefined || targetArg === undefined) {
+    res.status(400).json({ error: 'parameters missing' });
+  }
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const hours = body.hoursArg.map(Number);
-    res.json({ wat: 'wat' });
+    const { hours, target } = parseArgumentsExercise(hoursArg, targetArg);
+    res.json(calculateExercises(hours, target));
   } catch {
-    console.log('meh');
+    res.status(400).json({ error: 'malformatted parameters' });
   }
 });
 

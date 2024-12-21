@@ -14,9 +14,12 @@ interface ExerciseValues {
 }
 
 export const parseArgumentsExercise = (
-  hours: number[],
-  target: number
+  hoursArg: unknown[],
+  targetArg: unknown
 ): ExerciseValues => {
+  const hours = hoursArg.map(Number);
+  const target = Number(targetArg);
+
   if (hours.some(isNaN) || isNaN(target)) {
     throw new Error('Provided values must be numbers');
   }
@@ -75,8 +78,8 @@ if (require.main === module) {
     const args = process.argv;
     if (args.length < 4) throw new Error('Not enough arguments');
 
-    const targetArg = Number(args[2]);
-    const hoursArg = args.slice(3).map(Number);
+    const targetArg = args[2];
+    const hoursArg = args.slice(3);
 
     const { hours, target } = parseArgumentsExercise(hoursArg, targetArg);
 
