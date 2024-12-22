@@ -1,77 +1,10 @@
-import { Gender, NewPatient } from './types';
+import { Gender } from './types';
+import { z } from 'zod';
 
-export const toNewPatient = (obj: unknown): NewPatient => {
-  if (!obj || typeof obj !== 'object') {
-    throw new Error('Incorrect or missing data');
-  }
-  if (
-    !(
-      'name' in obj &&
-      'dateOfBirth' in obj &&
-      'ssn' in obj &&
-      'gender' in obj &&
-      'occupation' in obj
-    )
-  ) {
-    throw new Error('Incorrect data: some fields are missing');
-  }
-
-  const newPatient: NewPatient = {
-    name: parseName(obj.name),
-    dateOfBirth: parseDateOfBirth(obj.dateOfBirth),
-    ssn: parseSsn(obj.ssn),
-    gender: parseGender(obj.gender),
-    occupation: parseOccupation(obj.occupation),
-  };
-
-  return newPatient;
-};
-
-const isString = (text: unknown): text is string => {
-  return typeof text === 'string';
-};
-
-const parseName = (name: unknown): string => {
-  if (!name || !isString(name)) {
-    throw new Error('Incorrect or missing name');
-  }
-  return name;
-};
-
-const isDate = (date: string): boolean => {
-  return Boolean(Date.parse(date));
-};
-
-const parseDateOfBirth = (dateOfBirth: unknown): string => {
-  if (!dateOfBirth || !isString(dateOfBirth) || !isDate(dateOfBirth)) {
-    throw new Error('Incorrect or missing date');
-  }
-  return dateOfBirth;
-};
-
-const parseSsn = (ssn: unknown): string => {
-  if (!ssn || !isString(ssn)) {
-    throw new Error('Incorrect or missing ssn');
-  }
-  return ssn;
-};
-
-const isGender = (param: string): param is Gender => {
-  return Object.values(Gender)
-    .map((v) => v.toString())
-    .includes(param);
-};
-
-const parseGender = (gender: unknown): Gender => {
-  if (!gender || !isString(gender) || !isGender(gender)) {
-    throw new Error('Incorrect or missing gender');
-  }
-  return gender;
-};
-
-const parseOccupation = (occupation: unknown): string => {
-  if (!occupation || !isString(occupation)) {
-    throw new Error('Incorrect or missing occupation');
-  }
-  return occupation;
-};
+export const newPatientSchema = z.object({
+  name: z.string(),
+  dateOfBirth: z.string().date(),
+  ssn: z.string(),
+  gender: z.nativeEnum(Gender),
+  occupation: z.string(),
+});

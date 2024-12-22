@@ -9,3 +9,6 @@ Content-Type: application/json
   "gender": "male",
   "occupation": "New york city cop"
 }
+
+###
+GET http://localhost:3001/api/patients
