@@ -33,7 +33,7 @@ interface HealthCheckEntry extends BaseEntry {
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: EntryTypes.OccupationalHealthcare;
   employerName: string;
-  sickLeave: {
+  sickLeave?: {
     startDate: string;
     endDate: string;
   };

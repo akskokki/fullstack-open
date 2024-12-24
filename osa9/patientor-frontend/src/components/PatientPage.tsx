@@ -4,6 +4,7 @@ import { Male, Female, QuestionMark } from '@mui/icons-material';
 
 import { PatientDetails } from '../types';
 import patientService from '../services/patients';
+import EntryDetails from './EntryDetails';
 
 const PatientPage = () => {
   const { id } = useParams();
@@ -39,16 +40,7 @@ const PatientPage = () => {
       <div>occupation: {patient.occupation}</div>
       <h3>entries</h3>
       {patient.entries.map((e) => (
-        <div key={e.id}>
-          <strong>{e.date}</strong>: {e.description}
-          {e.diagnosisCodes && (
-            <ul>
-              {e.diagnosisCodes.map((code) => (
-                <li key={code}>{code}</li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <EntryDetails entry={e} key={e.id} />
       ))}
     </>
   );
