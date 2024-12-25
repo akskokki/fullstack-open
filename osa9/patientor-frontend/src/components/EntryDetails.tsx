@@ -11,8 +11,6 @@ import {
   MedicalServices,
 } from '@mui/icons-material';
 import HealthRatingBar from './HealthRatingBar';
-import { useEffect, useState } from 'react';
-import diagnosisService from '../services/diagnosis';
 
 const entryStyle: React.CSSProperties = {
   outline: '1px solid',
@@ -20,13 +18,13 @@ const entryStyle: React.CSSProperties = {
   marginBottom: 5,
 };
 
-const DiagnosisCodeList = ({ codes }: { codes: string[] }) => {
-  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
-
-  useEffect(() => {
-    diagnosisService.getAll().then((ds) => setDiagnoses(ds));
-  }, []);
-
+const DiagnosisCodeList = ({
+  codes,
+  diagnoses,
+}: {
+  codes: string[];
+  diagnoses: Diagnosis[];
+}) => {
   return (
     <>
       <h4>diagnosis codes</h4>
@@ -41,7 +39,13 @@ const DiagnosisCodeList = ({ codes }: { codes: string[] }) => {
   );
 };
 
-const HospitalEntryDetails = ({ entry }: { entry: HospitalEntry }) => {
+const HospitalEntryDetails = ({
+  entry,
+  diagnoses,
+}: {
+  entry: HospitalEntry;
+  diagnoses: Diagnosis[];
+}) => {
   return (
     <div style={entryStyle}>
       <div>
@@ -54,7 +58,7 @@ const HospitalEntryDetails = ({ entry }: { entry: HospitalEntry }) => {
       </div>
       <div>diagnosis by {entry.specialist}</div>
       {entry.diagnosisCodes && (
-        <DiagnosisCodeList codes={entry.diagnosisCodes} />
+        <DiagnosisCodeList codes={entry.diagnosisCodes} diagnoses={diagnoses} />
       )}
     </div>
   );
@@ -62,8 +66,10 @@ const HospitalEntryDetails = ({ entry }: { entry: HospitalEntry }) => {
 
 const OccupationalHealthcareEntryDetails = ({
   entry,
+  diagnoses,
 }: {
   entry: OccupationalHealthcareEntry;
+  diagnoses: Diagnosis[];
 }) => {
   return (
     <div style={entryStyle}>
@@ -80,13 +86,19 @@ const OccupationalHealthcareEntryDetails = ({
       )}
       <div>diagnosis by {entry.specialist}</div>
       {entry.diagnosisCodes && (
-        <DiagnosisCodeList codes={entry.diagnosisCodes} />
+        <DiagnosisCodeList codes={entry.diagnosisCodes} diagnoses={diagnoses} />
       )}
     </div>
   );
 };
 
-const HealthCheckEntryDetails = ({ entry }: { entry: HealthCheckEntry }) => {
+const HealthCheckEntryDetails = ({
+  entry,
+  diagnoses,
+}: {
+  entry: HealthCheckEntry;
+  diagnoses: Diagnosis[];
+}) => {
   return (
     <div style={entryStyle}>
       <div>
@@ -101,24 +113,35 @@ const HealthCheckEntryDetails = ({ entry }: { entry: HealthCheckEntry }) => {
       </div>
       <div>diagnosis by {entry.specialist}</div>
       {entry.diagnosisCodes && (
-        <DiagnosisCodeList codes={entry.diagnosisCodes} />
+        <DiagnosisCodeList codes={entry.diagnosisCodes} diagnoses={diagnoses} />
       )}
     </div>
   );
 };
 
-const EntryDetails = ({ entry }: { entry: Entry }) => {
+const EntryDetails = ({
+  entry,
+  diagnoses,
+}: {
+  entry: Entry;
+  diagnoses: Diagnosis[];
+}) => {
   const assertNever = (_: never) => {
     throw new Error('invalid entry type');
   };
 
   switch (entry.type) {
     case EntryTypes.Hospital:
-      return <HospitalEntryDetails entry={entry} />;
+      return <HospitalEntryDetails entry={entry} diagnoses={diagnoses} />;
     case EntryTypes.OccupationalHealthcare:
-      return <OccupationalHealthcareEntryDetails entry={entry} />;
+      return (
+        <OccupationalHealthcareEntryDetails
+          entry={entry}
+          diagnoses={diagnoses}
+        />
+      );
     case EntryTypes.HealthCheck:
-      return <HealthCheckEntryDetails entry={entry} />;
+      return <HealthCheckEntryDetails entry={entry} diagnoses={diagnoses} />;
     default:
       return assertNever(entry);
   }
