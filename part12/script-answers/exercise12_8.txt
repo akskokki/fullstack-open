@@ -1,0 +1,6 @@
+docker exec -it d1 bash
+mongosh -u root -p example
+show dbs
+use the_database
+show collections
+db.todos.insertOne({text: "Increase the number of tools in my tool belt", done: false})
