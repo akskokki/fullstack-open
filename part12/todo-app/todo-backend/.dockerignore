@@ -1,6 +1,8 @@
 .gitignore
 .dockerignore
 Dockerfile
+mongo_data
+redis_data
 
 # Logs
 logs

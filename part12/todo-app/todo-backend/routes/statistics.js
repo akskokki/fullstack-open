@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const added_todos = Number(await getAsync('added_todos')) || 0;
-  res.json({ added_todos });
+  res.json({ added_todos, e: 'e' });
 });
 
 module.exports = router;
