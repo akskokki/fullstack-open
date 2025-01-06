@@ -6,8 +6,6 @@ services:
       dockerfile: dev.Dockerfile
     volumes:
       - ./library-frontend/:/usr/src/app/
-    environment:
-      - VITE_BACKEND_URL=http://localhost:8080/api/
     container_name: library-front-dev
 
   server:
@@ -25,7 +23,7 @@ services:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
     ports:
       - 8080:80
-    container_name: library-reverse-proxy
+    container_name: library-reverse-proxy-dev
     depends_on:
       - app
       - server
