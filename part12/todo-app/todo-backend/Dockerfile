@@ -10,4 +10,4 @@ ENV NODE_ENV=production
 
 USER node
 
-CMD npm start
+CMD ["npm", "start", "--", "--host"]
