@@ -1,5 +1,6 @@
 const { GraphQLError } = require('graphql')
 const { PubSub } = require('graphql-subscriptions')
+const jwt = require('jsonwebtoken')
 
 const User = require('./models/user')
 const Book = require('./models/book')
