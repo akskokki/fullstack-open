@@ -1,11 +1,6 @@
-require('dotenv').config()
-const express = require('express')
-const { DataTypes, Model, Sequelize } = require('sequelize')
+const { Model, DataTypes } = require('sequelize')
 
-const app = express()
-app.use(express.json())
-
-const sequelize = new Sequelize(process.env.DATABASE_URL, { logging: false })
+const { sequelize } = require('../util/db')
 
 class Blog extends Model {}
 
@@ -29,7 +24,7 @@ Blog.init(
     },
     likes: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      defaultValue: 0,
     },
   },
   {
@@ -40,12 +35,4 @@ Blog.init(
   }
 )
 
-const main = async () => {
-  const blogs = await Blog.findAll()
-
-  console.log(
-    blogs.map((b) => `${b.author}: '${b.title}', ${b.likes} likes`).join('\n')
-  )
-}
-
-main()
+module.exports = Blog
